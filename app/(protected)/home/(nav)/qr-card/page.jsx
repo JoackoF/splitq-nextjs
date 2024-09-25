@@ -14,7 +14,7 @@ export default async function QrPage() {
                 </div>
                 <div className="space-y-2">
                     <h1 className="font-bold text-2xl">Tu Tarjeta Virtual</h1>
-                    <p className="text-text-secundary">Este QR te servira para poder recargar saldo en cualquier punto centrico</p>
+                    <p className="text-text-secundary">Este QR te servira para poder recargar saldo en cualquier punto centrico, ademas te permitira canjear tus productos en los puntos de venta</p>
                 </div>
             </section>
         </>

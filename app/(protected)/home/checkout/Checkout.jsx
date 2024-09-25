@@ -1,6 +1,6 @@
 "use client";
 import { multiplyDecimal } from "@/lib/decimal";
-import { MdOutlineLocalOffer } from "react-icons/md";
+import { MdOutlineLocalOffer, MdTaskAlt } from "react-icons/md";
 import {
   Drawer,
   DrawerClose,
@@ -18,6 +18,7 @@ import Loader from "@/components/Loader";
 import Link from "next/link";
 import AlertWarning from "@/components/ui/AlertWarning";
 import BackButton from "@/components/buttons/BackButton";
+import IconBox from "@/components/ui/IconBox";
 export default function Checkout({ checkoutData }) {
   const [loading, startBuying] = useTransition();
   const [error, setError] = useState(false);
@@ -26,8 +27,8 @@ export default function Checkout({ checkoutData }) {
     startBuying(async () => {
       const result = await buyProducts(checkoutData);
       if (result?.error) {
-        console.log(result)
-        setError(result)
+        console.log(result);
+        setError(result);
         return;
       }
       setSucess(true);
@@ -38,20 +39,34 @@ export default function Checkout({ checkoutData }) {
     return (
       <>
         <BackButton href="/home" />
-        <h1 className="font-bold text-2xl">La compra ha sido exitosa!</h1>
-        <p>
-          Ahora puedes canjear tus productos comprados con los tickets que has
-          adquirido !
-        </p>
-        <Button>
-          <Link href={"/home/tickets"}>Ir a mis tickets</Link>
-        </Button>
+        <div className="gap-4 bg-foreground border-border mt-4 border rounded-md flex flex-col items-center justify-center p-4 text-center">
+          <IconBox
+            Icon={MdTaskAlt}
+            size={32}
+            variant={"square"}
+            className="h-14 !w-14 !rounded-full"
+          />
+          <div className="space-y-2">
+            <h1 className="font-bold text-2xl">Tu compra a sido exitosa</h1>
+            <p className="text-text-secundary text-sm">
+              Ahora puedes canjear tus tickets en los puestos de venta!
+            </p>
+          </div>
+          <Button asChild className="w-full">
+            <Link href={"/home/tickets"}>Ir a mis tickets</Link>
+          </Button>
+        </div>
       </>
     );
   }
 
   if (checkoutData?.error) {
-    return <p>No hay productos en el carrito !</p>;
+    return (
+      <>
+      <BackButton href="/home" />
+      <p className="mt-4">No hay productos en el carrito ! :c</p>
+      </>
+    )
   }
 
   return (
@@ -98,15 +113,32 @@ export default function Checkout({ checkoutData }) {
               Por el momento esta accion no se puede deshacer.
             </DrawerDescription>
             <div className="!text-start">
-              {error && error.error == "NO_STOCK_PRODUCT" && <AlertWarning title={"Producto sin stock !"} description={<div>
-                <p>Hay un producto en tu carrito que no tiene stock suficiente</p>
-                <p><span className="font-bold">Producto</span>: {error.product_name}</p>
-                <p><span className="font-bold">Stock Actual</span>: {error.currentStock}</p>
-                <p><span className="font-bold">Cantidad a comprar</span>: {error.quantity}</p>
-              </div>} />
-              }
+              {error && error.error == "NO_STOCK_PRODUCT" && (
+                <AlertWarning
+                  title={"Producto sin stock !"}
+                  description={
+                    <div>
+                      <p>
+                        Hay un producto en tu carrito que no tiene stock
+                        suficiente
+                      </p>
+                      <p>
+                        <span className="font-bold">Producto</span>:{" "}
+                        {error.product_name}
+                      </p>
+                      <p>
+                        <span className="font-bold">Stock Actual</span>:{" "}
+                        {error.currentStock}
+                      </p>
+                      <p>
+                        <span className="font-bold">Cantidad a comprar</span>:{" "}
+                        {error.quantity}
+                      </p>
+                    </div>
+                  }
+                />
+              )}
             </div>
-
           </DrawerHeader>
           <DrawerFooter>
             <Button
